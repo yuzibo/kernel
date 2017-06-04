@@ -1,0 +1,22 @@
+===============================
+cat /proc/cmdline:
+===============================
+BOOT_IMAGE=/vmlinuz-4.11.0-rc7-next-20170419 root=/dev/sda10 ro quiet
+
+===============================
+ls /boot to display kernel image
+===============================
+
+/boot/config-3.2.0-4-686-pae
+/boot/config-4.10.0-rc8+
+/boot/config-4.11.0-rc7-next-20170419
+/boot/initrd.img-3.2.0-4-686-pae
+/boot/initrd.img-4.10.0-rc8+
+/boot/initrd.img-4.11.0-rc7-next-20170419
+/boot/System.map-3.2.0-4-686-pae
+/boot/System.map-4.10.0-rc8+
+/boot/System.map-4.11.0-rc7-next-20170419
+/boot/vmlinuz-3.2.0-4-686-pae
+/boot/vmlinuz-4.10.0-rc8+
+/boot/vmlinuz-4.11.0-rc7-next-20170419
+
