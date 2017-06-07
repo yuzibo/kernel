@@ -1,0 +1,31 @@
+From 92677b83819d416f5808ecad0ddd9d95b080e2e8 Mon Sep 17 00:00:00 2001
+Message-Id: <92677b83819d416f5808ecad0ddd9d95b080e2e8.1496746286.git.tsu.yubo@gmail.com>
+In-Reply-To: <cover.1496746286.git.tsu.yubo@gmail.com>
+References: <cover.1496746286.git.tsu.yubo@gmail.com>
+From: Bo YU <tsu.yubo@gmail.com>
+Date: Tue, 6 Jun 2017 18:37:28 +0800
+Subject: [PATCH 4/4] staging: speakup: alignment match open parens
+
+I have aligned argument with parenthesis, so checkpatch no check also.
+
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ drivers/staging/speakup/serialio.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/speakup/serialio.c b/drivers/staging/speakup/serialio.c
+index 00b25d3591d2..9cfc8142a318 100644
+--- a/drivers/staging/speakup/serialio.c
++++ b/drivers/staging/speakup/serialio.c
+@@ -139,7 +139,7 @@ static void start_serial_interrupt(int irq)
+ 	     speakup_info.port_tts + UART_MCR);
+ 	/* Turn on Interrupts */
+ 	outb(UART_IER_MSI | UART_IER_RLSI | UART_IER_RDI,
+-			speakup_info.port_tts + UART_IER);
++	     speakup_info.port_tts + UART_IER);
+ 	inb(speakup_info.port_tts + UART_LSR);
+ 	inb(speakup_info.port_tts + UART_RX);
+ 	inb(speakup_info.port_tts + UART_IIR);
+-- 
+1.7.10.4
+

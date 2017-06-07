@@ -1,0 +1,21 @@
+From 92677b83819d416f5808ecad0ddd9d95b080e2e8 Mon Sep 17 00:00:00 2001
+Message-Id: <cover.1496746286.git.tsu.yubo@gmail.com>
+From: Bo YU <tsu.yubo@gmail.com>
+Date: Tue, 6 Jun 2017 18:51:26 +0800
+Subject: [PATCH 0/4] staging: speakup: fix code style
+
+As checkpatch.pl reported, i fixed these complaint one by one. Maybe
+patch 04 depend on patch 02.
+
+Bo YU (4):
+  staging: speakup: add a missing blank line after declaration
+  staging: speakup: add a space around '|'
+  staging: speakup: in serialio.c no over 80 chars long
+  staging: speakup: alignment match open parens
+
+ drivers/staging/speakup/serialio.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+--
+1.7.10.4
+

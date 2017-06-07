@@ -1,0 +1,51 @@
+yubo@debian:~/little/09$ ls -la /sys/kernel/eudyptula/
+总用量 0
+drwxr-xr-x 2 root root    0  6月  6 05:24 .
+drwxr-xr-x 9 root root    0  6月  6 05:23 ..
+-rw-r--r-- 1 root root 4096  6月  6 05:24 foo
+-rw-r--r-- 1 root root 4096  6月  6 05:24 id
+-rw-r--r-- 1 root root 4096  6月  6 05:24 jiffies
+yubo@debian:~/little/09$ su
+密码：
+su：鉴定故障
+yubo@debian:~/little/09$ su
+密码：
+root@debian:/home/yubo/little/09# echo "1234" >> /sys/kernel/eudyptula/jiffies 
+bash: echo: 写错误: 无效的参数
+
+
+
+yubo@debian:~/little/09$
+
+yubo@debian:~/little/09$ cat /sys/kernel/eudyptula/jiffies
+508185
+yubo@debian:~/little/09$ cat /sys/kernel/eudyptula/jiffies
+508626
+yubo@debian:~/little/09$ cat /sys/kernel/eudyptula/jiffies
+508979
+yubo@debian:~/little/09$
+
+yubo@debian:~/little/09$ cat /sys/kernel/eudyptula/id
+e233f61cc9c6
+
+yubo@debian:~/little/09$ echo "xyz" >> /sys/kernel/eudyptula/id
+bash: /sys/kernel/eudyptula/id: 权限不够
+yubo@debian:~/little/09$ sudo echo "xyz" >> /sys/kernel/eudyptula/id
+bash: /sys/kernel/eudyptula/id: 权限不够
+yubo@debian:~/little/09$ su
+密码：
+root@debian:/home/yubo/little/09# echo "xyz" >> /sys/kernel/eudyptula/id
+bash: echo: 写错误: 无效的参数
+
+ echo "e233f61cc9c6" >> /sys/kernel/eudyptula/id
+root@debian:/home/yubo/little/09# echo $?
+0
+
+root@debian:/home/yubo/little/09#
+
+root@debian:/home/yubo/little/09# echo "hello, this is my test on task 09 for eudyptula. I love linux kernel development" >> /sys/kernel/eudyptula/foo
+root@debian:/home/yubo/little/09# cat /sys/kernel/eudyptula/foo
+hello, this is my test on task 09 for eudyptula. I love linux kernel development
+root@debian:/home/yubo/little/09#
+
+

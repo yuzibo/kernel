@@ -1,0 +1,32 @@
+From 28c0daa409c7f341ac40310098927e9b60968551 Mon Sep 17 00:00:00 2001
+Message-Id: <28c0daa409c7f341ac40310098927e9b60968551.1496746286.git.tsu.yubo@gmail.com>
+In-Reply-To: <cover.1496746286.git.tsu.yubo@gmail.com>
+References: <cover.1496746286.git.tsu.yubo@gmail.com>
+From: Bo YU <tsu.yubo@gmail.com>
+Date: Tue, 6 Jun 2017 18:08:12 +0800
+Subject: [PATCH 1/4] staging: speakup: add a missing blank line after
+ declaration
+
+Fixed checkpatch warning by adding a blank line after declare
+expression
+
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ drivers/staging/speakup/serialio.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/staging/speakup/serialio.c b/drivers/staging/speakup/serialio.c
+index 969373201356..8d2f7c672cc6 100644
+--- a/drivers/staging/speakup/serialio.c
++++ b/drivers/staging/speakup/serialio.c
+@@ -162,6 +162,7 @@ static void spk_serial_send_xchar(char ch)
+ static void spk_serial_tiocmset(unsigned int set, unsigned int clear)
+ {
+ 	int old = inb(speakup_info.port_tts + UART_MCR);
++
+ 	outb((old & ~clear) | set, speakup_info.port_tts + UART_MCR);
+ }
+ 
+-- 
+1.7.10.4
+
