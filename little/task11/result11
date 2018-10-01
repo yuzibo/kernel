@@ -1,0 +1,20 @@
+yubo@debian:~/yubo/task_11/$ cd /sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1
+yubo@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1$ ls
+driver  event_char  id  latency_timer  port_number  power  subsystem  tty  uevent
+yubo@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1$ cat id
+e233f61cc9c6
+yubo@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1$ echo 1 > id
+bash: id: Permission denied
+yubo@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1$
+yubo@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1$ sudo su
+[sudo] password for yubo:
+root@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1# ls
+driver  event_char  id  latency_timer  port_number  power  subsystem  tty  uevent
+root@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1# echo hello > id
+bash: echo: write error: Invalid argument
+root@debian:/sys/devices/pci0000:00/0000:00:07.0/usb1/1-2/1-2:1.1/ttyUSB1# echo e233f61cc9c6 > id
+
+===================
+cat /proc/cmdline:
+
+BOOT_IMAGE=/vmlinuz-4.14.0+ root=UUID=7538ca4f-d383-48ce-ac34-7ff685939aea ro quiet
