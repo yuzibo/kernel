@@ -1,0 +1,68 @@
+From 4bfaa12db3847f52876cab36423021d51e2d4696 Mon Sep 17 00:00:00 2001
+From: Bo YU <tsu.yubo@gmail.com>
+Date: Wed, 30 Jan 2019 19:17:20 +0800
+Subject: [PATCH] Task13: use kmem_cache_* to replace kmalloc()
+To: yuzibode@126.com
+
+Replacing the kmalloc with kmem_cache_alloc
+
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+---
+ task12-2.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/task12-2.c b/task12-2.c
+index 6b9f59e..c4c8f49 100644
+--- a/task12-2.c
++++ b/task12-2.c
+@@ -26,6 +26,8 @@ LIST_HEAD(head_list);
+ static DEFINE_RWLOCK(list_lock);
+ /* it is necessary  to use lock */
+ 
++struct kmem_cache *identity_cache;
++
+ /*there is another method to init the list*/
+ /*
+  * identity_create:
+@@ -43,7 +45,7 @@ static int identity_create(char *name, int id)
+ {
+ 	struct identity *temp;
+ 
+-	temp = kmalloc(sizeof(struct identity), GFP_KERNEL);
++	temp = kmem_cache_alloc(identity_cache, GFP_KERNEL);
+ 	if (!temp)
+ 		goto free_mem;
+ 
+@@ -58,7 +60,7 @@ static int identity_create(char *name, int id)
+ 	return 0;
+ 
+ free_mem:
+-	kfree(temp);
++	kmem_cache_free(identity_cache, temp);
+ 	return -ENOMEM;
+ }
+ /**
+@@ -106,6 +108,12 @@ static int __init identity_init(void)
+ 	int ret = 0;
+ 	struct identity *temp = NULL;
+ 
++	identity_cache = kmem_cache_create("task13",
++			sizeof(struct identity), 0, 0, NULL);
++
++	if (!identity_cache)
++		return -ENOMEM;
++
+ 	ret =  identity_create("Alice", 1);
+ 	if (ret)
+ 		pr_debug("error\n");
+@@ -137,6 +145,7 @@ static int __init identity_init(void)
+ }
+ static void __exit identity_exit(void)
+ {
++	kmem_cache_destroy(identity_cache);
+ 	pr_debug("exit the identity");
+ }
+ 
+-- 
+2.11.0
+
