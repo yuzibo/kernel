@@ -1,0 +1,79 @@
+From little@www.eudyptula-challenge.org Thu Feb 14 02:45:44 2019
+Delivered-To: tsu.yubo@gmail.com
+Received: by 2002:a25:9c02:0:0:0:0:0 with SMTP id c2csp584547ybo;
+        Wed, 13 Feb 2019 23:45:44 -0800 (PST)
+X-Google-Smtp-Source: AHgI3IbbHhvpHLyXjnCLJjLGUQaI8fPwr/09OlPdu0ZtaWuWO59ev8IR8poUqA3A+07epv6DCfV5
+X-Received: by 2002:a17:902:74cb:: with SMTP id f11mr43754plt.180.1550130344150;
+        Wed, 13 Feb 2019 23:45:44 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550130344; cv=none;
+        d=google.com; s=arc-20160816;
+        b=WCsx1nakLQ887NzfbQREdbcg4c1ezQ/WpKTIj5RAzONn1UuGGGNTo8Gq3L37pX5CDK
+         RwD1d189mnH0HIL0269AcZj/loM12Cgl3ucFNwMWno6WpqPGD9fZnTWCc3sXJU8Y+bO4
+         rvhjZS2pnsTX84zi2WrN1SSi8O2RibHBdDrbnWZpZhK2zcdUX384gEoQ6zNfzevatQlh
+         02UVKZsLxV4XYadLH0M+9u9wzxfFX6OapqxylGoO32IkGfjnKMu/IoBL2iixjck12lgk
+         Gu8UF1zwX72vuwudR0J43d7xeNnKEUCtO9SqVuUbIB8qHKbkXlrPWnWfSel513bwy1rT
+         +uug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=user-agent:content-disposition:mime-version:message-id:subject:to
+         :from:date;
+        bh=sqnHGI9YXUOeNEKy71FbekeK8+Dn36tnWtNra2tWqhc=;
+        b=dE9ZSx/SfCDf6lV2RNih7IBNZy8q6qWUnpveEcTuyz8FrjPJBaKtufdfkEjx4BuyUW
+         sx1B5WVJjVUJ05WF0tHxn/UCgDpQZOjONodVd8j6NSyZ4qKhe+mcRq42EGaUIhpKie/Q
+         89DBw10YR+pkrJrakeUNYR1YA42oOuF9/Gkf6jBT5bzzaWj0cSakTDml/UeDvR0FT+Ft
+         3i7UR24cX1jjvX2uL3QFLu+ZH6dz26XkhDqvCEDl+W3l+Lo0ogYFqh4wtRV4AtqOaWqS
+         lZtj5ou+pC9si+csq3wGcPW1JIojJxPLHIlN8LTfW2lve4legZqUkVh2SXQGkpBsqA6a
+         FNxQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       spf=pass (google.com: best guess record for domain of little@www.eudyptula-challenge.org designates 23.239.3.192 as permitted sender) smtp.mailfrom=little@www.eudyptula-challenge.org
+Return-Path: <little@www.eudyptula-challenge.org>
+Received: from www.eudyptula-challenge.org (www.eudyptula-challenge.org. [23.239.3.192])
+        by mx.google.com with ESMTP id 11si1713561pfh.90.2019.02.13.23.45.44
+        for <tsu.yubo@gmail.com>;
+        Wed, 13 Feb 2019 23:45:44 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of little@www.eudyptula-challenge.org designates 23.239.3.192 as permitted sender) client-ip=23.239.3.192;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: best guess record for domain of little@www.eudyptula-challenge.org designates 23.239.3.192 as permitted sender) smtp.mailfrom=little@www.eudyptula-challenge.org
+Received: by www.eudyptula-challenge.org (Postfix, from userid 1000)
+	id 975BFE7A7; Thu, 14 Feb 2019 07:45:53 +0000 (UTC)
+Date: Thu, 14 Feb 2019 07:45:53 +0000
+From: Little Penguin <little@eudyptula-challenge.org>
+To: tsu.yubo@gmail.com
+Subject: [e233f61cc9c6] Task 14 of the Eudyptula Challenge
+Message-ID: <20190214074553.GA15653@eudyptula-challenge.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
+Status: RO
+Content-Length: 1251
+Lines: 28
+
+This is Task 14 of the Eudyptula Challenge
+------------------------------------------
+
+Now that you have the basics of lists, and we glossed over the custom
+allocators (the first cut at that task was much harder, you got off
+easy), it's time to move on to something a bit more old-school: tasks.
+
+For this task:
+  - Add a new field to the core kernel task structure called, wait for
+    it, "id".
+  - When the task is created, set the id to your id.  Imaginative, I
+    know.  You try writing these tasks.
+  - Add a new proc file for every task called, "id", located in the
+    /proc/${PID}/ directory for that task.
+  - When the proc file is read from, have it print out the value of
+    your id, and then increment it by one, allowing different tasks to
+    have different values for the "id" file over time as they are read
+    from.
+  - Provide some "proof" it all works properly.
+
+As you are touching files all over the kernel tree, a patch is the
+required result to be sent in here.  Please specify which kernel version
+you make this patch against, to give my virtual machines a chance to
+figure out how to apply it.
+
+Also provide some kind of proof that you tested the patch.
+
+And, in case you happened to forget it, your id is "e233f61cc9c6".
+
