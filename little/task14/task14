@@ -1,0 +1,30 @@
+yubo@debian:/proc/1$ ls
+ls: 无法读取符号链接'cwd': 权限不够
+ls: 无法读取符号链接'root': 权限不够
+ls: 无法读取符号链接'exe': 权限不够
+autogroup        exe        mem            personality   stat
+auxv             fd         mountinfo      projid_map    statm
+cgroup           fdinfo     mounts         root          status
+clear_refs       gid_map    mountstats     sched         syscall
+cmdline          id         net            schedstat     task
+comm             io         ns             sessionid     timerslack_ns
+coredump_filter  limits     oom_adj        setgroups     uid_map
+cpuset           loginuid   oom_score      smaps         wchan
+cwd              map_files  oom_score_adj  smaps_rollup
+environ          maps       pagemap        stack
+yubo@debian:/proc/1$ sudo cat id
+[sudo] yubo 的密码：
+e233f61cc9c6
+yubo@debian:/proc/1$ sudo cat id
+[sudo] yubo 的密码：
+e233f61cc9c7
+
+yubo@debian:/proc/11$ sudo cat id
+[sudo] yubo 的密码：
+e233f61cc9c6
+
+===============
+cat /proc/cmdline:
+ubo@debian:~/git/yuzibo.github.io$ cat /proc/cmdline
+BOOT_IMAGE=/boot/vmlinuz-5.0.0-rc6+ root=UUID=d1ca0328-4aba-4a68-b4d7-1c60cf8bd71b ro quiet
+
