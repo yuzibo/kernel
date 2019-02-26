@@ -1,0 +1,71 @@
+From 5a254ff455260ffe63a707401ffda29d1feef9e5 Mon Sep 17 00:00:00 2001
+From: Bo Yu <tsu.yubo@gmail.com>
+Date: Wed, 20 Feb 2019 16:12:12 +0800
+Subject: [PATCH] x86: Add a syscall for task 15
+
+Please consider the patch into v5.0.0-rc7
+
+Signed-off-by: Bo Yu <tsu.yubo@gmail.com>
+---
+ arch/x86/entry/syscalls/syscall_32.tbl |  1 +
+ include/linux/syscalls.h               |  2 ++
+ kernel/sys.c                           | 11 +++++++++++
+ 3 files changed, 14 insertions(+)
+
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 3cf7b533b3d1..db199f7504d0 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -398,3 +398,4 @@
+ 384	i386	arch_prctl		sys_arch_prctl			__ia32_compat_sys_arch_prctl
+ 385	i386	io_pgetevents		sys_io_pgetevents		__ia32_compat_sys_io_pgetevents
+ 386	i386	rseq			sys_rseq			__ia32_sys_rseq
++387	i386	eudyptula		sys_eudyptula			__ia32_sys_eudyptula
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 257cccba3062..3146652269b3 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1138,6 +1138,7 @@ asmlinkage long sys_old_mmap(struct mmap_arg_struct __user *arg);
+  * not implemented -- see kernel/sys_ni.c
+  */
+ asmlinkage long sys_ni_syscall(void);
++asmlinkage long sys_eudyptula(int high_id, int low_id);
+ 
+ #endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
+ 
+@@ -1315,4 +1316,5 @@ static inline unsigned int ksys_personality(unsigned int personality)
+ 	return old;
+ }
+ 
++
+ #endif
+diff --git a/kernel/sys.c b/kernel/sys.c
+index f7eb62eceb24..97905cea0f8e 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2571,6 +2571,16 @@ static int do_sysinfo(struct sysinfo *info)
+ 	return 0;
+ }
+ 
++SYSCALL_DEFINE2(eudyptula, int, high_id, int, low_id)
++{
++	long long id = 0xe233f61cc9c6;
++
++	if ((((long long)high_id << 28 | low_id << 4) >> 4) == id)
++		return 0;
++	else
++		return -EPERM;
++}
++
+ SYSCALL_DEFINE1(sysinfo, struct sysinfo __user *, info)
+ {
+ 	struct sysinfo val;
+@@ -2647,4 +2657,5 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
+ 
+ 	return 0;
+ }
++
+ #endif /* CONFIG_COMPAT */
+-- 
+2.11.0
+
