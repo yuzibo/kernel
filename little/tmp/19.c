@@ -73,7 +73,7 @@ static int thread_function(void *data)
 
 	if (!kthread_should_stop()) {
 		pr_info("kill thread from ps -ef\n");
-		schedule();
+//		schedule();
 	}
 
 //	wait_event_interruptible(wee_wait, condition);

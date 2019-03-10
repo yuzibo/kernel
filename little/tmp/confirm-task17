@@ -17,13 +17,13 @@ yubo      2203  1630  0 11:39 pts/2    00:00:00 ps -ef
 ===================
 To proof dynamic minor number && misc device node in /dev/:
 ===================
-yubo@debian:~/test/little$ ls -ls /dev/eudyptula 
+yubo@debian:~/test/little$ ls -ls /dev/eudyptula
 0 crw-rw-rw- 1 root root 10, 58 3月  10 11:38 /dev/eudyptula
 
 ===============================================================
 The write operation for misc device :
 ===============================================================
-yubo@debian:~/test/little$ cat test_write.c 
+yubo@debian:~/test/little$ cat test_write.c
 /*
  *     File Name: test_write.c
  *     Author: Bo Yu
@@ -78,16 +78,16 @@ int main()
 
 }
 
-yubo@debian:~/test/little$ gcc -g test_write.c -o write 
-yubo@debian:~/test/little$ ./write 
+yubo@debian:~/test/little$ gcc -g test_write.c -o write
+yubo@debian:~/test/little$ ./write
 starting test task 06...
 Type in your id into kernel
 e233f61cc9c6
 Writing the message to the device is [e233f61cc9c6], the len of write is 12
 success for matching of write! the ret is 12
-yubo@debian:~/test/little$ ./write 
+yubo@debian:~/test/little$ ./write
 starting test task 06...
 Type in your id into kernel
 eudyptula
 Writing the message to the device is [eudyptula], the len of write is 9
-write into kernel -1 bytes 
+write into kernel -1 bytes

@@ -13,6 +13,7 @@
 #include <linux/uaccess.h>
 #include <linux/sched.h>
 #include <linux/kthread.h>
+#include <linux/printk.h>
 /*
  * #include <linux/sched.h>   //wake_up_process()
  * #include <linux/kthread.h> //kthread_create(), kthread_run()
@@ -32,7 +33,6 @@ MODULE_LICENSE("GPL");
 static char *my_id = "e233f61cc9c6";
 static char read_id[BUF_LEN] = {0};
 static struct task_struct *eudyptula_task;
-static int condition;
 
 DECLARE_WAIT_QUEUE_HEAD(wee_wait);
 
@@ -64,21 +64,22 @@ struct miscdevice misc_device = {
 	.minor = MISC_DYNAMIC_MINOR,
 	.name = "eudyptula",
 	.fops = &dev_fops,
-	.mode = 0666,
+	.mode = 0222,
 };
 
 static int thread_function(void *data)
 {
-//	condition = 0;
+	int time_count = 0;
 
-	if (!kthread_should_stop()) {
-		pr_info("kill thread from ps -ef\n");
-		schedule();
-	}
+	do {
+		pr_info("kill thread from ps -ef==%d\n", ++time_count);
+		if (kthread_should_stop())
+			break;
+		if (wait_event_interruptible(wee_wait, kthread_should_stop()))
+			return -ERESTARTSYS;
+	} while (time_count <= 30);
 
-//	wait_event_interruptible(wee_wait, condition);
-
-	return 0;
+	return time_count;
 }
 
 static int __init hello_init(void)
@@ -102,7 +103,7 @@ static int __init hello_init(void)
 		return ret;
 	}
 	pr_info("Kernel thread: %s\n", eudyptula_task->comm);
-	wake_up_process(eudyptula_task);
+//	wake_up_process(eudyptula_task);
 //	condition = 1;
 //	wake_up_interruptible(&wee_wait);
 

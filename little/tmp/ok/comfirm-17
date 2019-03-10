@@ -1,0 +1,45 @@
+=============
+insmod 20.ko:
+============
+[ 1016.849129] hello,task17
+[ 1016.852632] Kernel thread: eudyptula
+[ 1016.856713] kill thread from ps -ef==1
+
+================
+misc devices"
+================
+ls -ls /dev/eudyptula
+0 c-w--w--w- 1 root root 10, 58 Mar 10 14:56 /dev/eudyptula
+
+================
+test write function for misc devirces
+=================
+yubo-2@debian:~/git/kernel/little/tmp/ok$ gcc -g test_write.c -o write
+yubo-2@debian:~/git/kernel/little/tmp/ok$ ./write
+starting test task 06...
+Failed to open the device
+: Permission denied
+yubo-2@debian:~/git/kernel/little/tmp/ok$ sudo ./write
+starting test task 06...
+Type in your id into kernel
+e233f61cc9c6
+Writing the message to the device is [e233f61cc9c6], the len of write is 12
+success for matching of write! the ret is 12
+yubo-2@debian:~/git/kernel/little/tmp/ok$ sudo ./write
+starting test task 06...
+Type in your id into kernel
+eudyptula
+Writing the message to the device is [eudyptula ], the len of write is 10
+write into kernel -1 bytes
+
+====================
+rmmod 20.ko:
+===================
+[ 1224.489829] hello, write
+[ 1236.105776] hello, write
+[ 1355.264798] kill thread from ps -ef==2
+[ 1355.265079] exit task17
+
+
+
+
