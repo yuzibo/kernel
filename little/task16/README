@@ -1,0 +1,5 @@
+
+sudo make C=2 M=drivers/staging
+
+Submmit sparse patch and confirm it was been accepted!
+

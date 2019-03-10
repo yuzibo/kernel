@@ -1,0 +1,261 @@
+===============================================================
+the task06.c for misc device module:
+===============================================================
+
+
+#include <linux/module.h>
+#include <linux/slab.h>
+#include <linux/types.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/miscdevice.h>
+#include <linux/major.h>
+#include <linux/fs.h>
+#include <linux/device.h>
+#include <linux/cdev.h>
+#include <linux/uaccess.h>
+
+
+
+MODULE_AUTHOR("Bo YU<tsu.yubo@gmail.com>");
+
+MODULE_DESCRIPTION("task 06\n");
+
+MODULE_LICENSE("GPL");
+
+#define BUF_LEN 60
+#define MY_ID_LEN 12 /* include final NULL, so it is 13 */
+
+static char *my_id = "e233f61cc9c6";
+static char read_id[BUF_LEN] = {0};
+
+
+static ssize_t dev_read(struct file *file, char __user *userbuf,
+			size_t len, loff_t *f_pos)
+{
+
+	return simple_read_from_buffer(userbuf, len,
+				f_pos, my_id, strlen(my_id));
+}
+
+
+static ssize_t dev_write(struct file *file, const char __user *userbuf,
+			size_t len, loff_t *pos)
+{
+	ssize_t ret;
+
+	ret = simple_write_to_buffer(read_id, BUF_LEN, pos, userbuf, len);
+
+	if (ret < 0)
+		return ret;
+
+	else if ((ret != MY_ID_LEN) || strncmp(my_id, read_id, len - 1))
+		return -EINVAL;
+	else
+		return len;
+}
+
+
+static const struct file_operations dev_fops = {
+	.write = dev_write,
+	.read = dev_read,
+};
+
+
+
+struct miscdevice misc_device = {
+	.minor = MISC_DYNAMIC_MINOR,
+	.name = "eudyptula",
+	.fops = &dev_fops,
+};
+
+
+static int __init hello_init(void)
+{
+	int ret;
+
+	ret = misc_register(&misc_device);
+
+	if (ret) {
+		pr_err("can't register misc device\n'");
+		return ret;
+	}
+
+	return 0;
+}
+static void __exit hello_exit(void)
+{
+	misc_deregister(&misc_device);
+}
+
+module_init(hello_init);
+
+module_exit(hello_exit);
+
+============================================================
+Makefile for task06.c:
+===============================================================
+
+obj-m += task06.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+
+
+==================================================================
+insmod output:
+===============================================================
+
+[ 5523.777265] Hello, module Task 06, hello, world!
+[ 5523.777420] I am in
+
+==================================================================
+To proof dynamic minor number && misc device node in /dev/:
+===============================================================
+
+yubo@debian:~/little/test$ ls -l /dev/e*
+crw------- 1 root root 10, 58  4月  18 09:40 /dev/eudyptula
+
+==================================================================
+The userspace program to test read operation for misc device and return
+my assigned id:
+
+===============================================================
+
+/*
+ *     File Name: task_test.c
+ *     Author: Bo Yu
+ *     Mail: tsu.yubo@gmail.com
+ *     Created Time: 2017年02月27日 星期一 06时26分11秒
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+
+#define BUF_LEN 256
+
+static char re_string[256];
+static char string_to_send[256];
+
+int main()
+{
+	int ret, fd;
+
+	printf("starting test task 06...\n");
+	fd = open("/dev/eudyptula", O_RDWR);
+	if (fd < 0) {
+		perror("Failed to open the device\n");
+		return errno;
+	}
+
+	printf("Reading from the device...\n");
+	ret = read(fd, re_string, BUF_LEN);
+	if (ret < 0) {
+		perror("Failed to read the device... \n");
+		return errno;
+	}
+	printf("The received message is: [%s]\n", re_string);
+
+	close(fd);
+
+
+}
+
+===============================================================
+the result for read operation:
+===============================================================
+
+yubo@debian:~/little/test$ sudo ./read
+[sudo] password for yubo:
+starting test task 06...
+Reading from the device...
+The received message is: [e233f61cc9c6]
+
+
+===============================================================
+The write operation for misc device :
+===============================================================
+/*
+ *     File Name: test_write.c
+ *     Author: Bo Yu
+ *     Mail: tsu.yubo@gmail.com
+ *     Created Time: 2017年03月03日 星期五 00时13分11秒
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+
+#define BUF_LEN 256
+
+static char string_to_send[256] = {0};
+
+int main()
+{
+	int ret, fd;
+
+	printf("starting test task 06...\n");
+	fd = open("/dev/eudyptula", O_RDWR);
+	if (fd < 0) {
+		perror("Failed to open the device\n");
+		return errno;
+	}
+
+
+	printf("Type in your id into kernel\n");
+
+	scanf("%[^\n]%*c", string_to_send);
+	/*	^表示”非”，即读入其后面的字符就结束读入。
+	 *	这样想读入一行字符串带空格的字符直接用:
+	 *	scanf("%[^\n]%*c",str);
+         */
+
+	printf("Writing the message to the device is [%s], the len of write is %d\n",string_to_send, strlen(string_to_send));
+
+	ret = write(fd, string_to_send, strlen(string_to_send));
+
+	if(ret != strlen(string_to_send)){
+
+		printf("write into kernel %d bytes \n", ret);
+		return errno;
+	}
+
+	else
+		printf("success for matching of write! the ret is %d\n", ret);
+	close(fd);
+
+
+}
+
+
+
+===============================================================
+The result for write operation:
+===============================================================
+yubo@debian:~/little/test$ sudo ./write
+starting test task 06...
+Type in your id into kernel
+e233f61cc9c6
+Writing the message to the device is [e233f61cc9c6], the len of write is 12
+success for matching of write! the ret is 12
+yubo@debian:~/little/test$ sudo ./write
+starting test task 06...
+Type in your id into kernel
+yubo1234
+Writing the message to the device is [yubo1234], the len of write is 8
+write into kernel -1 bytes
+
+
+===============================================================
+The output of rmmod task06.ko:
+===============================================================
+
+[ 6760.612775] Hello, Module task 06: Exit
+[ 6760.612827] I am out
+

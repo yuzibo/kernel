@@ -1,0 +1,93 @@
+=========
+insmod output:
+========
+[  261.079507] hello,task17
+[  261.079577] Kernel thread: eudyptula
+
+=============
+ps -ef :
+===========
+yubo      1705  1401  0 11:34 ?        00:00:00 /usr/lib/dconf/dconf-service
+yubo      1733     1  0 11:34 ?        00:00:00 sogou-qimpanel-watchdog
+yubo      2050  1639  0 11:37 pts/4    00:00:00 mousepad confirm-task17
+root      2121     2 99 11:38 ?        00:01:35 [eudyptula]
+root      2171     2  0 11:39 ?        00:00:00 [kworker/0:0-eve]
+yubo      2203  1630  0 11:39 pts/2    00:00:00 ps -ef
+
+===================
+To proof dynamic minor number && misc device node in /dev/:
+===================
+yubo@debian:~/test/little$ ls -ls /dev/eudyptula 
+0 crw-rw-rw- 1 root root 10, 58 3月  10 11:38 /dev/eudyptula
+
+===============================================================
+The write operation for misc device :
+===============================================================
+yubo@debian:~/test/little$ cat test_write.c 
+/*
+ *     File Name: test_write.c
+ *     Author: Bo Yu
+ *     Mail: tsu.yubo@gmail.com
+ *     Created Time: 2017年03月03日 星期五 00时13分11秒
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+#include <unistd.h>
+
+#define BUF_LEN 256
+
+static char string_to_send[256] = {0};
+
+int main()
+{
+	int ret, fd;
+
+	printf("starting test task 06...\n");
+	fd = open("/dev/eudyptula", O_RDWR);
+	if (fd < 0) {
+		perror("Failed to open the device\n");
+		return errno;
+	}
+
+
+	printf("Type in your id into kernel\n");
+
+	scanf("%[^\n]%*c", string_to_send);
+	/*	^表示”非”，即读入其后面的字符就结束读入。
+	 *	这样想读入一行字符串带空格的字符直接用:
+	 *	scanf("%[^\n]%*c",str);
+         */
+
+	printf("Writing the message to the device is [%s], the len of write is %d\n",string_to_send, strlen(string_to_send));
+
+	ret = write(fd, string_to_send, strlen(string_to_send));
+
+	if(ret != strlen(string_to_send)){
+
+		printf("write into kernel %d bytes \n", ret);
+		return errno;
+	}
+
+	else
+		printf("success for matching of write! the ret is %d\n", ret);
+	close(fd);
+
+
+}
+
+yubo@debian:~/test/little$ gcc -g test_write.c -o write 
+yubo@debian:~/test/little$ ./write 
+starting test task 06...
+Type in your id into kernel
+e233f61cc9c6
+Writing the message to the device is [e233f61cc9c6], the len of write is 12
+success for matching of write! the ret is 12
+yubo@debian:~/test/little$ ./write 
+starting test task 06...
+Type in your id into kernel
+eudyptula
+Writing the message to the device is [eudyptula], the len of write is 9
+write into kernel -1 bytes 
